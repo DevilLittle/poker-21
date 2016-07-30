@@ -1,17 +1,15 @@
 let _ = require('lodash');
 
 function getFormattedInput(input) {
-    return _
-        .chain(input)
-        .split('-')
-        .value();
+    return input.split('-');
 }
 function getNormalPoints(formattedInput) {
-    let containStringJQK = _.chain(formattedInput).includes('J').value() || _.chain(formattedInput).includes('Q').value() || _.chain(formattedInput).includes('K').value();
-    if (containStringJQK) {
+    // let containStringJQK = _.chain(formattedInput).includes('J').value() || _.chain(formattedInput).includes('Q').value() || _.chain(formattedInput).includes('K').value();
+    let containsJQK=_(formattedInput).some(x => ['J','K','Q'].includes(x))
+    if (containsJQK) {
         return _.chain(formattedInput).map(element=> {
-            if (element === 'J' || element === 'Q' || element === 'K') {
-                return _.replace(element, element, 10);
+            if (['J', 'K' ,'Q'].includes(element)) {
+                return 10;
             } else {
                 return element;
             }
@@ -21,28 +19,19 @@ function getNormalPoints(formattedInput) {
 }
 
 function getAllPoints(normalPoints) {
-    let containStringA = _.chain(normalPoints).includes('A').value();
-    
-    if (containStringA) {
+    let containsA =normalPoints.includes('A');
+
+    if (containsA) {
         let initalPoints = _.chain(normalPoints).map(element=> {
-            let stringArray = '';
-            if (element === 'A') {
-                stringArray = _.chain(element).replace('A', 1).value();
-            } else {
-                stringArray = element;
-            }
-            return _.chain(stringArray).parseInt().value();
+            return element==='A' ? 1 : parseInt(element);
         }).sum().value();
 
         if (initalPoints <= 11) {
             initalPoints += 10;
         }
-
         return initalPoints;
     } else {
-        return _.chain(normalPoints).map(element=> {
-            return _.chain(element).parseInt().value();
-        }).sum().value();
+       return _(normalPoints).map(element => parseInt(element)).sum();
     }
 }
 function printPointA(inputA) {
@@ -65,19 +54,23 @@ function printPointB(inputB) {
     // console.log(allPoints);
 }
 
-function getCompareResult(pointA, pointB, normalPointsA, normalPointsB) {
+function getCompareResult(pointA, pointB) {
+    let formattedInputA=getFormattedInput(inputA);
+    let cardNumberA=getNormalPoints(formattedInputA).length;
+    let formattedInputB=getFormattedInput(inputB);
+    let cardNumberB=getNormalPoints(formattedInputB).length;
     if (pointA > 21 && pointB > 21) {
-        return "A failed & B failed!";
+        return "A & B tied!";
     } else if (pointA > 21 && pointB <= 21) {
         return 'B won!';
     } else if (pointA <= 21 && pointB > 21) {
         return 'A won!';
     } else if (pointA <= 21 && pointB <= 21) {
         if (pointA === pointB) {
-            if (normalPointsA.length === normalPointsB.length) {
+            if (cardNumberA === cardNumberB) {
                 return 'A & B tied!';
             } else {
-                if (normalPointsA.length > normalPointsB.length) {
+                if (cardNumberA > cardNumberB) {
                     return 'B win!';
                 } else {
                     return 'A win!';
@@ -92,22 +85,19 @@ function getCompareResult(pointA, pointB, normalPointsA, normalPointsB) {
         }
     }
 }
-
-function printResult(inputA, inputB) {
+function getFinalResult(inputA, inputB) {
     let pointA = printPointA(inputA);
     let pointB = printPointB(inputB);
     let normalPointsA = getNormalPoints(inputA);
     let normalPointsB = getNormalPoints(inputB);
     let compareResult = getCompareResult(pointA, pointB, normalPointsA, normalPointsB);
     return compareResult;
-    // console.log(compareResult);
-
 }
 // let inputA='A-2-4';
 let inputA = 'A-2-3-4-J';
 let inputB = '4-2-Q-5';
 
-printResult(inputA, inputB);
+getFinalResult(inputA, inputB);
 module.exports = {
     getFormattedInput: getFormattedInput,
     getNormalPoints: getNormalPoints,
@@ -115,5 +105,5 @@ module.exports = {
     printPointA:printPointA,
     printPointB:printPointB,
     getCompareResult:getCompareResult,
-    printResult:printResult
+    getFinalResult:getFinalResult
 };
