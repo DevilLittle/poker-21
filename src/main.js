@@ -4,8 +4,7 @@ function getFormattedInput(input) {
     return input.split('-');
 }
 function getNormalPoints(formattedInput) {
-    // let containStringJQK = _.chain(formattedInput).includes('J').value() || _.chain(formattedInput).includes('Q').value() || _.chain(formattedInput).includes('K').value();
-    let containsJQK=_(formattedInput).some(x => ['J','K','Q'].includes(x))
+    let containsJQK = _(['J','K','Q']).some(x => formattedInput.includes(x));
     if (containsJQK) {
         return _.chain(formattedInput).map(element=> {
             if (['J', 'K' ,'Q'].includes(element)) {
@@ -22,9 +21,9 @@ function getAllPoints(normalPoints) {
     let containsA =normalPoints.includes('A');
 
     if (containsA) {
-        let initalPoints = _.chain(normalPoints).map(element=> {
+        let initalPoints = _(normalPoints).map(element=> {
             return element==='A' ? 1 : parseInt(element);
-        }).sum().value();
+        }).sum();
 
         if (initalPoints <= 11) {
             initalPoints += 10;
@@ -88,14 +87,13 @@ function getCompareResult(pointA, pointB) {
 function getFinalResult(inputA, inputB) {
     let pointA = printPointA(inputA);
     let pointB = printPointB(inputB);
-    let normalPointsA = getNormalPoints(inputA);
-    let normalPointsB = getNormalPoints(inputB);
-    let compareResult = getCompareResult(pointA, pointB, normalPointsA, normalPointsB);
+    let compareResult = getCompareResult(pointA, pointB);
+    // console.log(compareResult);
     return compareResult;
 }
-// let inputA='A-2-4';
-let inputA = 'A-2-3-4-J';
-let inputB = '4-2-Q-5';
+
+let inputA = '4-2-Q-5';
+let inputB = 'A-2-3-4-A';
 
 getFinalResult(inputA, inputB);
 module.exports = {
