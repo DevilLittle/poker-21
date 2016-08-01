@@ -34,14 +34,14 @@ function getAllPoints(normalPoints) {
     }
 }
 function printPointA(inputA) {
+    // console.log(inputA);
     let formattedInputA = getFormattedInput(inputA);
     // console.log(formattedInputA);
     let normalPointsA = getNormalPoints(formattedInputA);
     // console.log(normalPointsA);
     let allPoints = getAllPoints(normalPointsA);
-    return allPoints;
     // console.log(allPoints);
-
+    return allPoints;
 }
 function printPointB(inputB) {
     let formattedTagB = getFormattedInput(inputB);
@@ -55,24 +55,26 @@ function printPointB(inputB) {
 
 function getCompareResult(pointA, pointB) {
     let formattedInputA=getFormattedInput(inputA);
-    let cardNumberA=getNormalPoints(formattedInputA).length;
+    let cardNumberA=formattedInputA.length;
     let formattedInputB=getFormattedInput(inputB);
-    let cardNumberB=getNormalPoints(formattedInputB).length;
+    // console.log(formattedInputB);
+    let cardNumberB=formattedInputB.length;
+    // console.log(cardNumberB);
     if (pointA > 21 && pointB > 21) {
         return "A & B tied!";
     } else if (pointA > 21 && pointB <= 21) {
         return 'B won!';
     } else if (pointA <= 21 && pointB > 21) {
-        return 'A won!';
+        return 'A win!';
     } else if (pointA <= 21 && pointB <= 21) {
         if (pointA === pointB) {
             if (cardNumberA === cardNumberB) {
                 return 'A & B tied!';
             } else {
-                if (cardNumberA > cardNumberB) {
-                    return 'B win!';
-                } else {
+                if (cardNumberA < cardNumberB) {
                     return 'A win!';
+                } else {
+                    return 'B win!';
                 }
             }
         } else {
@@ -91,9 +93,10 @@ function getFinalResult(inputA, inputB) {
     // console.log(compareResult);
     return compareResult;
 }
-
-let inputA = '4-2-Q-5';
-let inputB = 'A-2-3-4-A';
+let inputA = 'A-2-2-3';
+let inputB = '4-7-7';
+// let inputA = '4-2-Q-5';
+// let inputB = 'A-2-3-4-A';
 
 getFinalResult(inputA, inputB);
 module.exports = {
